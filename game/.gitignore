@@ -1,0 +1,11 @@
+# セーブ
+saves/**
+# キャッシュ
+cache/**
+**.rpyc
+# エラー
+errors.txt
+# ログ
+log.txt
+# トレースバック
+traceback.txt

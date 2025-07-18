@@ -1,0 +1,54 @@
+{
+  "name": "Ren'Py (Dev Container)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "root",
+  "runArgs": [
+    "--env",
+    "DISPLAY=${localEnv:DISPLAY}",
+    "--volume",
+    "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+  ],
+  "containerEnv": {
+    "TZ": "Asia/Tokyo",
+    "DISPLAY": "${localEnv:DISPLAY}"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.analysis.typeCheckingMode": "basic",
+        "python.analysis.autoImportCompletions": true,
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+        "python.formatting.provider": "none",
+        "isort.args": [
+          "--profile",
+          "black"
+        ]
+      },
+      "extensions": [
+        "renpy.language-renpy",
+        "saoudrizwan.claude-dev",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "visualstudioexptteam.vscodeintellicode",
+        "streetsidesoftware.code-spell-checker",
+        "mechatroner.rainbow-csv"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  }
+}

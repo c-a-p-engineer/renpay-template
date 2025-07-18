@@ -1,0 +1,33 @@
+# Python 3.13 + Ubuntu Bookworm ベース
+FROM mcr.microsoft.com/devcontainers/python:3.13-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+ENV RENPY_VERSION=8.3.1
+ENV RENPY_DIR=/opt/renpy
+ENV PATH="${RENPY_DIR}:${PATH}"
+
+# 必須パッケージのインストール
+# 必須パッケージのインストール
+RUN apt-get update && apt-get install -y \
+    wget curl unzip bzip2 \
+    libgtk2.0-0 libgl1-mesa-dev libglu1-mesa libgles2-mesa \
+    libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
+    fontconfig fonts-noto-cjk \
+    fonts-ipafont-mincho fonts-ipafont-gothic fonts-ipaexfont \
+    x11-apps \
+    && fc-cache -fv \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Ren'Py SDK のインストール
+RUN wget https://www.renpy.org/dl/${RENPY_VERSION}/renpy-${RENPY_VERSION}-sdk.tar.bz2 && \
+    tar xjf renpy-${RENPY_VERSION}-sdk.tar.bz2 && \
+    mv renpy-${RENPY_VERSION}-sdk ${RENPY_DIR} && \
+    rm renpy-${RENPY_VERSION}-sdk.tar.bz2 && \
+    ln -s ${RENPY_DIR}/renpy.sh /usr/local/bin/renpy
+
+# 作業ディレクトリ（VS Code DevContainerでマウントされる）
+WORKDIR /workspace
+
+# X11表示用に ENTRYPOINT をシンプルに
+ENTRYPOINT ["renpy"]
