@@ -8,6 +8,10 @@
 ## 「#」1つから始まっている行はコメントアウトされたコードです。
 ## 必要であれば適宜「#」を外して使ってください。
 
+define config.name = _("ずんだもんゲーム")     # 表示用（日本語でもOK）
+init python:
+    build.name = "zundamon_game"              # exe/zipに使う実際のファイル名用(ASCIIのみ推奨)
+
 init -1:
     python hide:
 

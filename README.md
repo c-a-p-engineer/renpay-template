@@ -1,130 +1,122 @@
-# Ren'Py Template (renpay-template)
+# Ren'Py DevContainer Template (renpay-template)
 
-このリポジトリは、ビジュアルノベルエンジン [Ren'Py](https://www.renpy.org/) を使用した開発のための DevContainer テンプレートです。
+ビジュアルノベルエンジン [Ren'Py](https://www.renpy.org/) を VS Code Dev Containers 上で手早く使うためのテンプレートです。
 
-## 🚀 概要
+## 🚀 特長
 
-- **Ren'Py SDK** を DevContainer 内に自動インストール
-- **日本語フォント対応済み**（IPAフォント）
-- **GUIアプリケーション対応（X11）**
-- **VSCode DevContainers 対応**
-- **Windows / WSL2 / Linux 向け**
-
----
-
-## 🧩 前提条件
-
-以下のツールをインストールしてください：
-
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [Dev Containers 拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- （Windows の場合）[VcXsrv](https://sourceforge.net/projects/vcxsrv/) または [X410](https://x410.dev/)
+* **Ren'Py SDK 自動導入**
+* **日本語フォント同梱（IPA系）**
+* **GUI対応（X11 / PulseAudio）**
+* **Windows / WSL2 / Linux 対応**
+* **ビルド用スクリプト同梱（Windows / macOS / Linux 用パッケージ生成）**
 
 ---
 
-## 📦 セットアップ手順
+## 🧩 前提ツール
 
-1. このリポジトリをクローン：
-
-    ```bash
-    git clone https://github.com/your-name/renpay-template.git
-    cd renpay-template
-    ```
-
-2. VS Code で開く → 「Reopen in Container」を選択
-
-3. 自動でDevContainerが構築され、Ren'Pyやフォントが導入されます
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [Dev Containers 拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop)
+* （Windowsのみ）Xサーバー（例： [VcXsrv](https://sourceforge.net/projects/vcxsrv/) / [X410](https://x410.dev/)）
 
 ---
 
-## 🖥️ Ren'Pyの起動方法
+## 📦 セットアップ
 
-コンテナ内で以下のコマンドを実行してください：
+```bash
+git clone https://github.com/your-name/renpay-template.git
+cd renpay-template
+```
+
+VS Code で開き、**Reopen in Container** を選択 → 自動で DevContainer が構築されます。
+
+---
+
+## 🖥️ 実行方法
+
+コンテナ内で:
 
 ```bash
 renpy .
+# うまく動かない場合:
+/opt/renpy/renpy.sh .
 ```
 
-または、X11が無効な場合は以下でも可：
-
-```bash
-xvfb-run --auto-servernum renpy .
-```
-
-※プロジェクトのルートが `renpy` に渡されることで、ゲームが即実行されます。
+> `.`(カレントディレクトリ) を渡せば、ゲームが即起動します。
 
 ---
 
-## 🌐 X11表示の確認方法（Windows / Linux）
+## 🌐 X11 表示確認（Windows例）
 
-### Windows + VcXsrv の場合：
+1. `XLaunch` 起動
 
-1. `XLaunch` を実行 → 以下の設定で起動：
+   * Multiple windows
+   * Start no client
+   * Disable access control
 
-   * ✔ Multiple windows
-   * ✔ Start no client
-   * ✔ Disable access control
-
-2. DevContainerが以下を含んでいればOK：
-
-```jsonc
-"runArgs": [
-  "--env", "DISPLAY=${localEnv:DISPLAY}",
-  "--volume", "/tmp/.X11-unix:/tmp/.X11-unix:rw"
-],
-"containerEnv": {
-  "DISPLAY": "${localEnv:DISPLAY}"
-}
-```
-
-3. 実行テスト：
+2. コンテナ内でテスト:
 
 ```bash
 xeyes
 ```
 
-→ 目が表示されれば成功です
+→ 目が表示されればOK。
 
 ---
 
-## 🔤 日本語フォント対応について
+## 🔊 音声出力（PulseAudio）
 
-本テンプレートにはIPAフォントが導入済みです。
+コンテナ→ホストへ音を出す設定です。
 
-### 🗂️ IPAフォント一覧（表示名付き）
+### Windowsでの PulseAudio 起動
 
-| 📄 ファイルパス            | 💬 フォント名（英語）  | 🈁 日本語名     |
-| -------------------- | ------------- | ----------- |
-| `./fonts/ipam.ttf`   | `IPAMincho`   | `IPA明朝`     |
-| `./fonts/ipaexg.ttf` | `IPAexGothic` | `IPAexゴシック` |
-| `./fonts/ipagp.ttf`  | `IPAPGothic`  | `IPA Pゴシック` |
-| `./fonts/ipaexm.ttf` | `IPAexMincho` | `IPAex明朝`   |
-| `./fonts/ipamp.ttf`  | `IPAPMincho`  | `IPA P明朝`   |
-| `./fonts/ipag.ttf`   | `IPAGothic`   | `IPAゴシック`   |
+1. ダウンロード
+   [PulseAudio for Windows](https://www.freedesktop.org/wiki/Software/PulseAudio/Ports/Windows/)
 
+2. 展開（例：`C:\pulseaudio`）
 
-### フォント設置場所：
+3. コマンドプロンプト/PowerShell:
 
-```
-game/
-└── fonts/
-    └── ipaexg.ttf
+```powershell
+cd C:\pulseaudio
+.\pulseaudio.exe -D --exit-idle-time=-1 --load="module-native-protocol-tcp auth-anonymous=1 port=4713"
 ```
 
-### `options.rpy` の設定（自動適用済み）：
+### コンテナ側での設定（自動化済み）
+
+`PULSE_SERVER` が `host.docker.internal:4713` になっていればOK。
+テスト:
+
+```bash
+ffplay -autoexit ./game/bgm/frog_piano.mp3
+```
+
+→ ホストから音が出れば成功。
+
+---
+
+## 🔤 日本語フォント
+
+IPA系フォントを同梱済みで、`options.rpy` から自動指定しています。
+
+| ファイル               | 英語名         | 日本語名      |
+| ------------------ | ----------- | --------- |
+| `fonts/ipam.ttf`   | IPAMincho   | IPA明朝     |
+| `fonts/ipaexg.ttf` | IPAexGothic | IPAexゴシック |
+| `fonts/ipagp.ttf`  | IPAPGothic  | IPA Pゴシック |
+| `fonts/ipaexm.ttf` | IPAexMincho | IPAex明朝   |
+| `fonts/ipamp.ttf`  | IPAPMincho  | IPA P明朝   |
+| `fonts/ipag.ttf`   | IPAGothic   | IPAゴシック   |
+
+`options.rpy`（抜粋）:
 
 ```renpy
-        ## ゲーム内で使われるデフォルトフォント
-
-        ## デフォルトフォントを含むファイル
-        style.default.font = "fonts/ipam.ttf"
+# デフォルトフォント
+style.default.font = "fonts/ipam.ttf"
 ```
 
-### 文字化け対策：
-
-* `.rpy` ファイルは UTF-8 で保存
-* 上記フォント指定が正しく行われていることを確認
+* `.rpy` は UTF-8 で保存
+* フォントパスの打ち間違いに注意
 
 ---
 
@@ -132,21 +124,21 @@ game/
 
 ```
 game/
-├── script.rpy      # ゲーム本編スクリプト
-├── screens.rpy     # UI定義（メインメニューなど）
-├── options.rpy     # 設定
+├── script.rpy
+├── screens.rpy
+├── options.rpy
 ├── fonts/
-│    └── ipaexg.ttf # 日本語対応フォント
-├── images/         # 画像素材（任意）
-├── audio/          # 音声素材（任意）
-└── saves/          # セーブデータ保存先
+│   └── ipaexg.ttf
+├── images/
+├── audio/
+└── saves/
 ```
 
 ---
 
-## 🧪 テスト用コード
+## 🧪 最小テストコード
 
-### `script.rpy`
+`script.rpy`
 
 ```renpy
 define z = Character("ずんだもん")
@@ -157,7 +149,7 @@ label start:
     return
 ```
 
-### `screens.rpy`
+`screens.rpy`
 
 ```renpy
 screen main_menu():
@@ -176,27 +168,50 @@ screen main_menu():
 
 ---
 
-## 📚 よくある質問
+## 📚 FAQ
 
-### Q: Ren'Pyのランチャー画面を起動したい
-
-A: `renpy.sh` を使って以下のように指定できます：
+**Q. ランチャー画面を出したい**
+A. 通常は不要ですが、以下で起動可能です。
 
 ```bash
-/opt/renpy/renpy.sh
+/opt/renpy/renpy.sh launcher .
 ```
 
-ただし GUI ランチャーは基本的に必要ありません。通常は `renpy .` で即起動します。
+**Q. X11が映らない / PulseAudioが鳴らない**
+
+* Windows ファイアウォールでブロックされていないか確認
+* `DISPLAY` / `PULSE_SERVER` 環境変数を確認
+* Xサーバー側のアクセス制御を無効化する
 
 ---
 
-## 🧰 補足情報
+## 🏗️ ビルド（配布パッケージ生成）
 
-* Ren'Py公式ドキュメント: [https://www.renpy.org/doc/html/](https://www.renpy.org/doc/html/)
+```bash
+chmod +x build.sh
+./build.sh
+```
+
+環境変数でカスタマイズ:
+
+```bash
+# 例: Windows のみビルド
+PACKAGES="windows" ./build.sh
+
+# 例: プロジェクト/出力先指定
+PROJ=/path/to/proj DEST=/artifacts ./build.sh
+```
+
+---
+
+## 🔗 参考
+
+* Ren'Py 公式ドキュメント: [https://www.renpy.org/doc/html/](https://www.renpy.org/doc/html/)
 * IPAフォント: [https://moji.or.jp/ipafont/](https://moji.or.jp/ipafont/)
 
 ---
 
 ## 📝 ライセンス
 
-本テンプレートはMITライセンスです。IPAフォントの使用はIPAの配布条件に準じてください。
+* 本テンプレート：MIT License
+* IPAフォント：IPA配布条件に準拠してください
