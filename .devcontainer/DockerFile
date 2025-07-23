@@ -8,7 +8,6 @@ ENV RENPY_DIR=/opt/renpy
 ENV PATH="${RENPY_DIR}:${PATH}"
 
 # 必須パッケージのインストール
-# 必須パッケージのインストール
 RUN apt-get update && apt-get install -y \
     wget curl unzip bzip2 \
     libgtk2.0-0 libgl1-mesa-dev libglu1-mesa libgles2-mesa \
@@ -18,6 +17,11 @@ RUN apt-get update && apt-get install -y \
     x11-apps \
     && fc-cache -fv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update && \
+    apt-get install -y ffmpeg pulseaudio-utils wget && \
+    apt-get clean
 
 # Ren'Py SDK のインストール
 RUN wget https://www.renpy.org/dl/${RENPY_VERSION}/renpy-${RENPY_VERSION}-sdk.tar.bz2 && \

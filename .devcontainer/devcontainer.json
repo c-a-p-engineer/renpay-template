@@ -12,7 +12,8 @@
   ],
   "containerEnv": {
     "TZ": "Asia/Tokyo",
-    "DISPLAY": "${localEnv:DISPLAY}"
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "PULSE_SERVER": "tcp:host.docker.internal"
   },
   "customizations": {
     "vscode": {

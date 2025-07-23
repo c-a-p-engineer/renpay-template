@@ -17,8 +17,8 @@ init -1:
         config.developer = True
 
         ## 画面の幅と高さ
-        config.screen_width = 800
-        config.screen_height = 600
+        config.screen_width = 1280
+        config.screen_height = 720
 
         ## ウィンドウモードで実行している時のウィンドウタイトル。
         config.window_title = u"A Ren'Py Game"
