@@ -195,9 +195,6 @@ chmod +x build.sh
 環境変数でカスタマイズ:
 
 ```bash
-# 例: Windows のみビルド
-PACKAGES="windows" ./build.sh
-
 # 例: プロジェクト/出力先指定
 PROJ=/path/to/proj DEST=/artifacts ./build.sh
 ```

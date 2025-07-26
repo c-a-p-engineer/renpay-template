@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+# Windows (Cygwin/MSYS/MinGW)上での実行を抑止
+if uname | grep -qE "CYGWIN_NT|MINGW(32|64)_NT|MSYS_NT"; then
+  echo "Error: This script cannot be run on Windows because it cannot handle the permissions of the Linux/Mac distributions." >&2
+  echo "Please run this in a Dev Container." >&2
+  exit 1
+fi
+
 PROJ=${PROJ:-/workspaces/renpay-template}
 SDK_DIR=${SDK_DIR:-/opt/renpy}
 PACKAGES=${PACKAGES:-"windows linux mac"}   # 空白区切りで列挙
@@ -14,17 +21,17 @@ log () { echo "$(date '+%F %T') $*"; }
 log "=== Ren'Py distribute start ==="
 log "SDK_DIR=$SDK_DIR  PROJ=$PROJ  PACKAGES=$PACKAGES"
 
-# --package を繰り返し展開
-PKG_ARGS=""
-for p in $PACKAGES; do
-  PKG_ARGS="$PKG_ARGS --package $p"
-done
-
 OLDPWD=$(pwd)
 cd "$SDK_DIR"
-log "Running: $RENpy launcher distribute \"$PROJ\" $PKG_ARGS"
-# shellcheck disable=SC2086
-"$RENpy" launcher distribute "$PROJ" $PKG_ARGS
+
+# --package 引数を組み立て
+set --
+for p in $PACKAGES; do
+  set -- "$@" --package "$p"
+done
+
+log "Running: $RENpy launcher distribute \"$PROJ\" $*"
+"$RENpy" launcher distribute "$PROJ" "$@"
 cd "$OLDPWD"
 log "Distribute finished."
 

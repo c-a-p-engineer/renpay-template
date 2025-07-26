@@ -209,3 +209,5 @@ init -1:
         ## 0 で無限（最速）
         config.default_text_cps = 0
 
+        ## シナリオスクリプトの検索パスを追加
+        config.searchpath.append("game/scenarios")
